@@ -11,7 +11,7 @@ $ VOL=/var/lib/minica
 Create the database for certificate storage and revokation.
 
 ```shell
-$ *docker run -ti --rm -v $VOL:/certs dparrish/minica create_database.sh*
+$ docker run -ti --rm -v $VOL:/certs dparrish/minica create_database.sh
 ...
 goose: migrating db environment 'development', current version: 0, target: 1
 OK    001_CreateCertificates.sql
@@ -22,13 +22,13 @@ OK    001_CreateCertificates.sql
 First, edit the Root CA configuration. At the very least you should change the CN and OU values to something that makes sense to you.
 
 ```shell
-$ *sudo vi $VOL/install/ca-csr.json*
+$ sudo vi $VOL/install/ca-csr.json
 ```
 
 Run the script that creates the Root CA certificate. This certificate is only used to generate an Intermediate certificate and should be protected.
 
 ```shell
-$ *docker run -ti --rm -v $VOL:/certs dparrish/minica create_root.sh*
+$ docker run -ti --rm -v $VOL:/certs dparrish/minica create_root.sh
 Creating Root Certificate.
 2019/02/19 04:58:54 [INFO] generating a new CA key and certificate from CSR
 2019/02/19 04:58:54 [INFO] generate received request
@@ -43,7 +43,7 @@ Creating Root Certificate.
 To validate and revoke certificates, a URL must be available to clients that use the CA's generated certificates. This URL should be served by the minica job. These URLs are configured in the `config.json` file, so you can edit that file directly or use the provided script to replace the placeholders automatically. For these instructions, `ca.dparrish.com` will be used for the base URL.
 
 ```shell
-$ *docker run -ti --rm -v $VOL:/certs dparrish/minica set_base_url.sh ca.dparrish.com*
+$ docker run -ti --rm -v $VOL:/certs dparrish/minica set_base_url.sh ca.dparrish.com
 ```
 
 ### Create the Intermediate Certificate
@@ -51,8 +51,8 @@ $ *docker run -ti --rm -v $VOL:/certs dparrish/minica set_base_url.sh ca.dparris
 Run the script that creates the Intermediate CA certificate. This certificate is used to sign all certificate requests from clients.
 
 ```shell
-$ *sudo vi $VOL/install/intermediate-csr.json*
-$ *docker run -ti --rm -v $VOL:/certs dparrish/minica create_intermediate.sh*
+$ sudo vi $VOL/install/intermediate-csr.json
+$ docker run -ti --rm -v $VOL:/certs dparrish/minica create_intermediate.sh
 2019/02/19 05:00:17 [INFO] generate received request
 2019/02/19 05:00:17 [INFO] received CSR
 2019/02/19 05:00:17 [INFO] generating key: ecdsa-256
@@ -78,15 +78,15 @@ specifically, section 10.2.3 ("Information Requirements").
 Start the Mini-CA job serving:
 
 ```shell
-$ *docker run -d --restart=always -P --name minica -v $VOL:/certs dparrish/minica*
+$ docker run -d --restart=always -P --name minica -v $VOL:/certs dparrish/minica
 ```
 
 You *should* remove the root certificate keypair from the container's volume and keep it offline. It is only ever used to generate a new Intermediate certificate.
 
 ```shell
-$ *docker cp minica:/certs/root-key.pem .*
-$ *docker cp minica:/certs/root.pem .*
-$ *docker exec -ti minica shred_root.sh*
+$ docker cp minica:/certs/root-key.pem .
+$ docker cp minica:/certs/root.pem .
+$ docker exec -ti minica shred_root.sh
 ```
 
 ## Usage

@@ -73,20 +73,21 @@ of Publicly-Trusted Certificates, v.1.1.6, from the CA/Browser Forum (https://ca
 specifically, section 10.2.3 ("Information Requirements").
 ```
 
+## Remove Root Certificate
+
+You **should** remove the Root Certificate keypair from the container's volume and keep it offline. It is only ever used to generate a new Intermediate certificate.
+
+```shell
+$ cp $VOL/root-key.pem $VOL/root.pem /some-backup-location
+$ docker exec -ti minica shred_root.sh
+```
+
 ### Start serving
 
 Start the Mini-CA job serving:
 
 ```shell
 $ docker run -d --restart=always -P --name minica -v $VOL:/certs dparrish/minica
-```
-
-You *should* remove the root certificate keypair from the container's volume and keep it offline. It is only ever used to generate a new Intermediate certificate.
-
-```shell
-$ docker cp minica:/certs/root-key.pem .
-$ docker cp minica:/certs/root.pem .
-$ docker exec -ti minica shred_root.sh
 ```
 
 ## Usage

@@ -1,0 +1,54 @@
+{
+   "signing" : {
+      "default" : {
+         "ocsp_url": "http://BASE_URL/ocsp",
+         "crl_url": "http://BASE_URL/crl",
+         "expiry" : "26280h"
+      },
+      "profiles" : {
+         "intermediate" : {
+            "usages" : [
+               "cert sign",
+               "crl sign"
+            ],
+            "expiry" : "43800h",
+            "ca_constraint" : {
+               "is_ca" : true,
+               "max_path_len" : 0,
+               "max_path_len_zero": true
+            }
+         },
+         "ocsp": {
+           "usages": ["digital signature", "ocsp signing"],
+           "expiry": "26280h"
+         },
+         "server" : {
+            "usages" : [
+               "signing",
+               "key encipherment",
+               "server auth"
+            ],
+            "expiry" : "43800h"
+         },
+         "email": {
+            "usages" : [
+               "code signing",
+               "digital signature",
+               "email protection",
+               "key encipherment",
+               "s/mime",
+               "signing"
+            ],
+            "expiry" : "87600h"
+         },
+         "client" : {
+            "usages" : [
+               "client auth",
+               "key encipherment",
+               "signing"
+            ],
+            "expiry" : "87600h"
+         }
+      }
+   }
+}

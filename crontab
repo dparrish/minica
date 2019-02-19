@@ -1,0 +1,2 @@
+# Regenerate the CRL every 5 minutes
+*/5 * * * * root /usr/local/bin/crl.sh

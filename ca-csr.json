@@ -1,0 +1,18 @@
+{
+  "CN": "Mini-CA Root Certificate",
+  "key": {
+    "algo": "ecdsa",
+    "size": 256
+  },
+  "ca" : {
+    "pathlen" : 2,
+    "expiry" : "262800h"
+  },
+  "names": [
+    {
+      "C": "AU",
+      "L": "Sydney",
+      "OU": "Mini-CA"
+    }
+  ]
+}
